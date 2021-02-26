@@ -68,6 +68,7 @@ class WeatherApi with ChangeNotifier {
     } catch (error) {
       _errorMessage =
           "Sorry, we don't have information about this sity. Try another one.";
+      _isLoading = false;
       notifyListeners();
     }
   }
@@ -84,6 +85,7 @@ class WeatherApi with ChangeNotifier {
       _location = result['title'];
       fetchWeatherInfo(_location);
     } catch (error) {
+      _isLoading = false;
       _errorMessage =
           "Sorry, we don't have information about this sity. Try another one.";
     }
@@ -97,6 +99,7 @@ class WeatherApi with ChangeNotifier {
     }).catchError((error) {
       _errorMessage =
           "Sorry, we don't have information about this sity. Try another one.";
+      _isLoading = false;
       notifyListeners();
     });
   }
