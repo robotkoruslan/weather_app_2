@@ -1,20 +1,23 @@
 import 'dart:convert';
+import 'dart:io';
+
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
+const int daysForecast = 7;
+
 class WeatherApi with ChangeNotifier {
-  // ignore: deprecated_member_use
-  var _minTemperatureForecast2 = new List(7);
-  // ignore: deprecated_member_use
-  var _maxTemperatureForecast2 = new List(7);
-  // ignore: deprecated_member_use
-  var _abbreviationForecast2 = new List(7);
+  final _minTemperatureForecast2 =
+      List<dynamic>.generate(daysForecast, (index) => null);
+  final _maxTemperatureForecast2 =
+      List<dynamic>.generate(daysForecast, (index) => null);
+  final _abbreviationForecast2 =
+      List<dynamic>.generate(daysForecast, (index) => null);
+
   String _location;
   int _woeid;
-  String _errorMessage = '';
-  // Position _currentPosition;
   int _temperature;
   int _maxTemperatureForecast;
   int _minTemperatureForecast;
@@ -26,7 +29,6 @@ class WeatherApi with ChangeNotifier {
   List get getmaxTemperatureForecast2 => _maxTemperatureForecast2;
   List get getabbreviationForecast2 => _abbreviationForecast2;
   String get getLocation => _location;
-  String get getErrorMessage => _errorMessage;
   String get abbrevation => _abbrevation;
   String get getWeather => _weather;
   int get getTemperature => _temperature;
@@ -35,44 +37,56 @@ class WeatherApi with ChangeNotifier {
   int get getWoeid => _woeid;
   bool get getIsLoading => _isLoading;
 
-  void fetchWeatherInfo(String newLocation) async {
-    print('Start');
+  Future<void> fetchWeatherInfo(String newLocation) async {
     _isLoading = true;
     notifyListeners();
     try {
-      var searchResult = await http.get(
+      // Get Where On Earth IDentifier
+      var woeId = await http.get(
           'https://www.metaweather.com/api/location/search/?query=' +
               newLocation);
-      if (searchResult == null) {
-        _errorMessage =
-            "Sorry, we don't have information about this sity. Try another one.";
-        return;
-      }
-      var result = await json.decode(searchResult.body)[0];
+      var result = await json.decode(woeId.body)[0];
       _location = result['title'];
       _woeid = result['woeid'];
 
-      var weatherInfo = await http
+      // Get Current Day Forecast
+      var currentForecast = await http
           .get('https://www.metaweather.com/api/location/' + _woeid.toString());
-      var weatherResult = json.decode(weatherInfo.body);
-      var consolidatedWeather = weatherResult["consolidated_weather"];
-      var data = consolidatedWeather[0];
+      var weatherResult = json.decode(currentForecast.body);
+      var data = weatherResult["consolidated_weather"][0];
       _temperature = data["the_temp"].round();
       _maxTemperatureForecast = data["min_temp"].round();
       _minTemperatureForecast = data["max_temp"].round();
       _weather = data["weather_state_name"].replaceAll(' ', '').toLowerCase();
       _abbrevation = data["weather_state_abbr"];
-      await fetchLocationDay();
-      _errorMessage = '';
-      notifyListeners();
-    } catch (error) {
-      _errorMessage =
-          "Sorry, we don't have information about this sity. Try another one.";
+
+      // Get 7 Day Forecast
+      await fetchSevenDaysForecast();
+
+      // Catch some kind of error
+    } on SocketException {
       _isLoading = false;
       notifyListeners();
+      throw ('Check internet connections!');
+    } on RangeError {
+      _isLoading = false;
+      notifyListeners();
+      throw ('We can\'t find this city please check name of the city!');
+    } on FormatException {
+      _isLoading = false;
+      notifyListeners();
+      throw ('Please type name of the city!');
+    } catch (error) {
+      _isLoading = false;
+      notifyListeners();
+      throw error;
     }
+    _isLoading = false;
+    notifyListeners();
+    print('finish');
   }
 
+  //Use current geolocation
   Future<void> getCurrentLocation() async {
     try {
       Position position = await Geolocator.getCurrentPosition(
@@ -81,30 +95,35 @@ class WeatherApi with ChangeNotifier {
           'https://www.metaweather.com/api/location/search/?lattlong=${position.latitude},${position.longitude}');
       _location = await json.decode(citylocation.body)[0]['title'];
       fetchWeatherInfo(_location);
+    } on SocketException {
+      throw ('Check internet connections!');
     } catch (error) {
       throw error;
     }
   }
 
-  Future<void> fetchLocationDay() async {
+  Future<void> fetchSevenDaysForecast() async {
     var today = new DateTime.now();
+    try {
+      for (var i = 0; i < daysForecast; i++) {
+        var locationDayResult = await http.get(
+            'https://www.metaweather.com/api/location/' +
+                _woeid.toString() +
+                '/' +
+                new DateFormat('y/M/d')
+                    .format(today.add(new Duration(days: i + 1)))
+                    .toString());
+        var result = json.decode(locationDayResult.body);
+        var data = result[0];
 
-    for (var i = 0; i < 7; i++) {
-      var locationDayResult = await http.get(
-          'https://www.metaweather.com/api/location/' +
-              _woeid.toString() +
-              '/' +
-              new DateFormat('y/M/d')
-                  .format(today.add(new Duration(days: i + 1)))
-                  .toString());
-      var result = json.decode(locationDayResult.body);
-      var data = result[0];
-
-      _abbreviationForecast2[i] = data["weather_state_abbr"];
-      print(_abbreviationForecast2);
-      _minTemperatureForecast2[i] = data["min_temp"].round().toString();
-      _maxTemperatureForecast2[i] = data["max_temp"].round().toString();
-      _isLoading = false;
+        _abbreviationForecast2[i] = data["weather_state_abbr"];
+        print(_abbreviationForecast2);
+        _minTemperatureForecast2[i] = data["min_temp"].round().toString();
+        _maxTemperatureForecast2[i] = data["max_temp"].round().toString();
+        _isLoading = false;
+      }
+    } catch (error) {
+      throw error;
     }
   }
 }

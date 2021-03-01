@@ -51,7 +51,9 @@ class ForecastElement extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontSize: 20.0),
               ),
               Text(
-                'Low: ' + minTemperature.toString() + ' °C',
+                'Low: ' +
+                    context.watch<WeatherApi>().getMinTemperature.toString() +
+                    ' °C',
                 style: TextStyle(color: Colors.white, fontSize: 20.0),
               ),
             ],

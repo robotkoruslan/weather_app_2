@@ -5,6 +5,7 @@ import 'package:weather_app_2/providers/weather_api.dart';
 class FindLocation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final scaffold = ScaffoldMessenger.of(context);
     return Container(
       margin: EdgeInsets.all(10),
       height: 50.0,
@@ -17,7 +18,20 @@ class FindLocation extends StatelessWidget {
             primary: Colors.transparent,
             textStyle: TextStyle(color: Colors.white, fontSize: 17),
           ),
-          onPressed: context.read<WeatherApi>().getCurrentLocation,
+          onPressed: () async {
+            try {
+              await context.read<WeatherApi>().getCurrentLocation();
+            } catch (error) {
+              scaffold.showSnackBar(
+                SnackBar(
+                  content: Text(
+                    "$error",
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              );
+            }
+          },
           child: Text('Use current location!')),
     );
   }
