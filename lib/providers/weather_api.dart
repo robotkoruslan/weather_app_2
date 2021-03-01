@@ -14,7 +14,7 @@ class WeatherApi with ChangeNotifier {
   String _location;
   int _woeid;
   String _errorMessage = '';
-  Position _currentPosition;
+  // Position _currentPosition;
   int _temperature;
   int _maxTemperatureForecast;
   int _minTemperatureForecast;
@@ -73,35 +73,17 @@ class WeatherApi with ChangeNotifier {
     }
   }
 
-  void getCity() async {
+  Future<void> getCurrentLocation() async {
     try {
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
       var citylocation = await http.get(
-          'https://www.metaweather.com/api/location/search/?lattlong=${_currentPosition.latitude},${_currentPosition.longitude}');
-      var result = json.decode(citylocation.body)[0];
-      if (result == null) {
-        _errorMessage = "Sorry, we can't find your location. Try again later.";
-        return;
-      }
-      _location = result['title'];
+          'https://www.metaweather.com/api/location/search/?lattlong=${position.latitude},${position.longitude}');
+      _location = await json.decode(citylocation.body)[0]['title'];
       fetchWeatherInfo(_location);
     } catch (error) {
-      _isLoading = false;
-      _errorMessage =
-          "Sorry, we don't have information about this sity. Try another one.";
+      throw error;
     }
-  }
-
-  getCurrentLocation() {
-    Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) {
-      _currentPosition = position;
-      getCity();
-    }).catchError((error) {
-      _errorMessage =
-          "Sorry, we don't have information about this sity. Try another one.";
-      _isLoading = false;
-      notifyListeners();
-    });
   }
 
   Future<void> fetchLocationDay() async {
