@@ -113,13 +113,11 @@ class WeatherApi with ChangeNotifier {
                 new DateFormat('y/M/d')
                     .format(today.add(new Duration(days: i + 1)))
                     .toString());
-        var result = json.decode(locationDayResult.body);
-        var data = result[0];
+        var result = json.decode(locationDayResult.body)[0];
 
-        _abbreviationForecast2[i] = data["weather_state_abbr"];
-        print(_abbreviationForecast2);
-        _minTemperatureForecast2[i] = data["min_temp"].round().toString();
-        _maxTemperatureForecast2[i] = data["max_temp"].round().toString();
+        _abbreviationForecast2[i] = result["weather_state_abbr"];
+        _minTemperatureForecast2[i] = result["min_temp"].round().toString();
+        _maxTemperatureForecast2[i] = result["max_temp"].round().toString();
         _isLoading = false;
       }
     } catch (error) {
