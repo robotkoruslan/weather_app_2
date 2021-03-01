@@ -83,7 +83,6 @@ class WeatherApi with ChangeNotifier {
     }
     _isLoading = false;
     notifyListeners();
-    print('finish');
   }
 
   //Use current geolocation

@@ -21,7 +21,7 @@ class WeatherScroll extends StatelessWidget {
                       context.watch<WeatherApi>().getMinTemperatureForecast2[i],
                       context
                           .watch<WeatherApi>()
-                          .getMinTemperatureForecast2[i]),
+                          .getmaxTemperatureForecast2[i]),
               ],
             ),
           );

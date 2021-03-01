@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:weather_app_2/providers/weather_api.dart';
-import 'package:provider/provider.dart';
 
 class ForecastElement extends StatelessWidget {
   final daysFromNow;
@@ -45,15 +43,11 @@ class ForecastElement extends StatelessWidget {
                 ),
               ),
               Text(
-                'High: ' +
-                    context.watch<WeatherApi>().getMaxTemperature.toString() +
-                    ' °C',
+                'High: ' + maxTemperature + ' °C',
                 style: TextStyle(color: Colors.white, fontSize: 20.0),
               ),
               Text(
-                'Low: ' +
-                    context.watch<WeatherApi>().getMinTemperature.toString() +
-                    ' °C',
+                'Low: ' + minTemperature + ' °C',
                 style: TextStyle(color: Colors.white, fontSize: 20.0),
               ),
             ],
