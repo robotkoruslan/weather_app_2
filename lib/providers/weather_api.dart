@@ -24,6 +24,7 @@ class WeatherApi extends ChangeNotifier {
   String _abbrevation = '';
   String _weather = 'clear';
   bool _isLoading = false;
+  bool _isLoaded = false;
 
   List<int> get getMinTemperatureForecast2 => _minTemperatureForecast2;
   List<int> get getmaxTemperatureForecast2 => _maxTemperatureForecast2;
@@ -36,6 +37,7 @@ class WeatherApi extends ChangeNotifier {
   int get getMinTemperature => _minTemperatureForecast;
   int get getWoeid => _woeid;
   bool get isLoading => _isLoading;
+  bool get isLoaded => _isLoaded;
 
   Future<void> fetchWeatherInfo(String newLocation) async {
     _isLoading = true;
@@ -120,6 +122,7 @@ class WeatherApi extends ChangeNotifier {
         _minTemperatureForecast2[i] = data["min_temp"].round() as int;
         _maxTemperatureForecast2[i] = data["max_temp"].round() as int;
         _isLoading = false;
+        _isLoaded = true;
       }
     } on Exception {
       throw 'Somthing was wrong!';
