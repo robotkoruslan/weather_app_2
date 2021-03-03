@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app_2/widgets/find_location.dart';
-import 'package:weather_app_2/widgets/scroll.dart';
+import 'package:weather_app_2/widgets/find_geolocation_button.dart';
+import 'package:weather_app_2/widgets/seven_days_forecast.dart';
 import 'package:weather_app_2/providers/weather_api.dart';
 import 'package:provider/provider.dart';
-import 'package:weather_app_2/widgets/center_widget.dart';
+import 'package:weather_app_2/widgets/current_weather.dart';
 import 'package:weather_app_2/widgets/find_text_field.dart';
 
 class HomePage extends StatefulWidget {
@@ -34,14 +34,14 @@ class _HomePageState extends State<HomePage> {
             body: (!isPortrait)
                 ? Container(
                     padding: const EdgeInsets.only(top: 30, bottom: 30),
-                    child: WeatherScroll())
+                    child: SevenDaysForecast())
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      CenterWidget(),
-                      WeatherScroll(),
+                      CurrentWeather(),
+                      SevenDaysForecast(),
                       FindTextField(),
-                      FindLocation(),
+                      FindGeolocationButton(),
                     ],
                   ),
           )),
