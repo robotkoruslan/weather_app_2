@@ -2,39 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ForecastElement extends StatelessWidget {
-  final daysFromNow;
-  final abbreviation;
-  final minTemperature;
-  final maxTemperature;
+  final int daysFromNow;
+  final String abbreviation;
+  final int minTemperature;
+  final int maxTemperature;
 
-  ForecastElement(this.daysFromNow, this.abbreviation, this.minTemperature,
-      this.maxTemperature);
+  const ForecastElement(this.daysFromNow, this.abbreviation,
+      this.minTemperature, this.maxTemperature);
 
   @override
   Widget build(BuildContext context) {
-    var now = new DateTime.now();
-    var oneDayFromNow = now.add(new Duration(days: daysFromNow));
+    final now = DateTime.now();
+    final oneDayFromNow = now.add(Duration(days: daysFromNow));
+    final minTemperature2 = this.minTemperature;
     return Padding(
-      padding: const EdgeInsets.only(left: 16.0),
+      padding: const EdgeInsets.only(left: 16),
       child: Container(
         decoration: BoxDecoration(
-          color: Color.fromRGBO(205, 212, 228, 0.2),
+          color: const Color.fromRGBO(205, 212, 228, 0.2),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16),
           child: Column(
             children: <Widget>[
               Text(
-                new DateFormat.E().format(oneDayFromNow),
-                style: TextStyle(color: Colors.white, fontSize: 25),
+                DateFormat.E().format(oneDayFromNow),
+                style: const TextStyle(color: Colors.white, fontSize: 25),
               ),
               Text(
-                new DateFormat.MMMd().format(oneDayFromNow),
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                DateFormat.MMMd().format(oneDayFromNow),
+                style: const TextStyle(color: Colors.white, fontSize: 20),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                padding: const EdgeInsets.only(top: 16, bottom: 16),
                 child: Image.network(
                   'https://www.metaweather.com/static/img/weather/png/' +
                       abbreviation +
@@ -43,12 +44,12 @@ class ForecastElement extends StatelessWidget {
                 ),
               ),
               Text(
-                'High: ' + maxTemperature + ' °C',
-                style: TextStyle(color: Colors.white, fontSize: 20.0),
+                'High: ' + '$maxTemperature' + ' °C',
+                style: const TextStyle(color: Colors.white, fontSize: 20),
               ),
               Text(
-                'Low: ' + minTemperature + ' °C',
-                style: TextStyle(color: Colors.white, fontSize: 20.0),
+                'Low: ' + '$minTemperature2' + ' °C',
+                style: const TextStyle(color: Colors.white, fontSize: 20),
               ),
             ],
           ),

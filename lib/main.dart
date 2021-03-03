@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'providers/weather_api.dart';
-import 'screens/home_page.dart';
+import 'package:weather_app_2/providers/weather_api.dart';
+import 'package:weather_app_2/screens/home_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,13 +10,11 @@ void main() {
 
 class MyApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider<WeatherApi>(
-      create: (context) => WeatherApi(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: HomePage(),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => ChangeNotifierProvider<WeatherApi>(
+        create: (context) => WeatherApi(),
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: HomePage(),
+        ),
+      );
 }

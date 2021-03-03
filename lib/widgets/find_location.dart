@@ -7,32 +7,32 @@ class FindLocation extends StatelessWidget {
   Widget build(BuildContext context) {
     final scaffold = ScaffoldMessenger.of(context);
     return Container(
-      margin: EdgeInsets.all(10),
-      height: 50.0,
+      margin: const EdgeInsets.all(10),
+      height: 50,
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0),
-                side: BorderSide(color: Colors.transparent)),
-            padding: EdgeInsets.all(10.0),
+                borderRadius: BorderRadius.circular(18),
+                side: const BorderSide(color: Colors.transparent)),
+            padding: const EdgeInsets.all(10),
             primary: Colors.transparent,
-            textStyle: TextStyle(color: Colors.white, fontSize: 17),
+            textStyle: const TextStyle(color: Colors.white, fontSize: 17),
           ),
           onPressed: () async {
             try {
-              await context.read<WeatherApi>().getCurrentLocation();
-            } catch (error) {
+              await context.read<WeatherApi>().currentLocation;
+            } on Exception catch (e) {
               scaffold.showSnackBar(
                 SnackBar(
                   content: Text(
-                    "$error",
+                    "$e",
                     textAlign: TextAlign.center,
                   ),
                 ),
               );
             }
           },
-          child: Text('Use current location!')),
+          child: const Text('Use current location!')),
     );
   }
 }

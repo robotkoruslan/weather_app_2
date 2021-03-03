@@ -3,8 +3,8 @@ import 'package:weather_app_2/widgets/find_location.dart';
 import 'package:weather_app_2/widgets/scroll.dart';
 import 'package:weather_app_2/providers/weather_api.dart';
 import 'package:provider/provider.dart';
-import '../widgets/center_widget.dart';
-import '../widgets/find_text_field.dart';
+import 'package:weather_app_2/widgets/center_widget.dart';
+import 'package:weather_app_2/widgets/find_text_field.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -14,7 +14,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Container(
@@ -23,7 +24,7 @@ class _HomePageState extends State<HomePage> {
               image: AssetImage(
                   'images/${context.watch<WeatherApi>().getWeather}.png'),
               fit: BoxFit.cover,
-              colorFilter: new ColorFilter.mode(
+              colorFilter: ColorFilter.mode(
                   Colors.black.withOpacity(0.6), BlendMode.dstATop),
             ),
           ),
@@ -32,11 +33,10 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: Colors.transparent,
             body: (!isPortrait)
                 ? Container(
-                    padding: EdgeInsets.only(top: 30, bottom: 30),
+                    padding: const EdgeInsets.only(top: 30, bottom: 30),
                     child: WeatherScroll())
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       CenterWidget(),
                       WeatherScroll(),
