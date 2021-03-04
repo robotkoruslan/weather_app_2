@@ -4,9 +4,21 @@ import 'package:provider/provider.dart';
 import 'package:weather_app_2/widgets/forecast_element.dart';
 
 class SevenDaysForecast extends StatelessWidget {
+  int dayFromNow;
+  String abbreviationForecast;
+  int maxTemperature;
+  int minTemperature;
+
+  SevenDaysForecast(
+      {this.dayFromNow,
+      this.abbreviationForecast,
+      this.maxTemperature,
+      this.minTemperature});
+
   @override
   Widget build(BuildContext context) {
     final weatherApi = context.watch<WeatherApi>();
+
     return (weatherApi.isLoaded)
         ? SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -14,10 +26,13 @@ class SevenDaysForecast extends StatelessWidget {
               children: <Widget>[
                 for (var i = 0; i < 7; i++)
                   ForecastElement(
-                      i + 1,
-                      weatherApi.getabbreviationForecast2[i],
-                      weatherApi.getMinTemperatureForecast2[i],
-                      weatherApi.getmaxTemperatureForecast2[i]),
+                      dayFromNow = i,
+                      abbreviationForecast =
+                          weatherApi.getabbreviationForecast2[dayFromNow],
+                      maxTemperature =
+                          weatherApi.getmaxTemperatureForecast2[dayFromNow],
+                      minTemperature =
+                          weatherApi.getMinTemperatureForecast2[dayFromNow]),
               ],
             ),
           )
