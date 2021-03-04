@@ -20,7 +20,7 @@ class FindGeolocationButton extends StatelessWidget {
           ),
           onPressed: () async {
             try {
-              await context.read<WeatherApi>().currentLocation;
+              await context.read<WeatherApi>().currentGeolocation;
             } on Exception catch (e) {
               scaffold.showSnackBar(
                 SnackBar(

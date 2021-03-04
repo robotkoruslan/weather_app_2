@@ -5,15 +5,15 @@ import 'package:weather_app_2/widgets/forecast_element.dart';
 
 class SevenDaysForecast extends StatelessWidget {
   int dayFromNow;
-  String abbreviationForecast;
-  int maxTemperature;
-  int minTemperature;
+  String forecastWeatherAbbreviation;
+  int forecastMaxTemperature;
+  int forecastMinTemperature;
 
   SevenDaysForecast(
       {this.dayFromNow,
-      this.abbreviationForecast,
-      this.maxTemperature,
-      this.minTemperature});
+      this.forecastWeatherAbbreviation,
+      this.forecastMaxTemperature,
+      this.forecastMinTemperature});
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +27,12 @@ class SevenDaysForecast extends StatelessWidget {
                 for (var i = 0; i < 7; i++)
                   ForecastElement(
                       dayFromNow = i,
-                      abbreviationForecast =
-                          weatherApi.getabbreviationForecast2[dayFromNow],
-                      maxTemperature =
-                          weatherApi.getmaxTemperatureForecast2[dayFromNow],
-                      minTemperature =
-                          weatherApi.getMinTemperatureForecast2[dayFromNow]),
+                      forecastWeatherAbbreviation =
+                          weatherApi.getForecastWeatherAbbreviation[dayFromNow],
+                      forecastMaxTemperature =
+                          weatherApi.getForecastMaxTemperature[dayFromNow],
+                      forecastMinTemperature =
+                          weatherApi.getForecastMinTemperature[dayFromNow]),
               ],
             ),
           )

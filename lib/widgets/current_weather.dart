@@ -12,13 +12,13 @@ class CurrentWeather extends StatelessWidget {
               Center(
                   child: Image.network(
                 'https://www.metaweather.com/static/img/weather/png/' +
-                    weatherApi.abbrevation +
+                    weatherApi.getCurentWeatherAbbrevation +
                     '.png',
                 width: 100,
               )),
               Center(
                 child: Text(
-                  weatherApi.getTemperature.toString() + ' °C',
+                  weatherApi.getCurrentTemperature.toString() + ' °C',
                   style: const TextStyle(color: Colors.white, fontSize: 60),
                 ),
               ),

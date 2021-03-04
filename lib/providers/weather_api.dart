@@ -9,32 +9,29 @@ import 'package:intl/intl.dart';
 const int daysForecast = 7;
 
 class WeatherApi extends ChangeNotifier {
-  final _minTemperatureForecast2 =
+  final _forecastMinTemperature =
       List<int>.generate(daysForecast, (index) => null);
-  final _maxTemperatureForecast2 =
+  final _forecastMaxTemperature =
       List<int>.generate(daysForecast, (index) => null);
-  final _abbreviationForecast2 =
+  final _forecastWeatherAbbreviation =
       List<String>.generate(daysForecast, (index) => null);
 
   String _location;
   int _woeid;
-  int _temperature;
-  int _maxTemperatureForecast;
-  int _minTemperatureForecast;
-  String _abbrevation = '';
+  int _currentTemperature;
+  String _currentWeatherAbbrevation = '';
   String _weather = 'clear';
   bool _isLoading = false;
   bool _isLoaded = false;
 
-  List<int> get getMinTemperatureForecast2 => _minTemperatureForecast2;
-  List<int> get getmaxTemperatureForecast2 => _maxTemperatureForecast2;
-  List<String> get getabbreviationForecast2 => _abbreviationForecast2;
+  List<int> get getForecastMinTemperature => _forecastMinTemperature;
+  List<int> get getForecastMaxTemperature => _forecastMaxTemperature;
+  List<String> get getForecastWeatherAbbreviation =>
+      _forecastWeatherAbbreviation;
   String get getLocation => _location;
-  String get abbrevation => _abbrevation;
+  String get getCurentWeatherAbbrevation => _currentWeatherAbbrevation;
   String get getWeather => _weather;
-  int get getTemperature => _temperature;
-  int get getMaxTemperature => _maxTemperatureForecast;
-  int get getMinTemperature => _minTemperatureForecast;
+  int get getCurrentTemperature => _currentTemperature;
   int get getWoeid => _woeid;
   bool get isLoading => _isLoading;
   bool get isLoaded => _isLoaded;
@@ -62,15 +59,13 @@ class WeatherApi extends ChangeNotifier {
           .get('https://www.metaweather.com/api/location/' + _woeid.toString());
       final weatherResult = json.decode(currentForecast.body);
       final data = weatherResult["consolidated_weather"][0];
-      _temperature = data["the_temp"].round() as int;
-      _maxTemperatureForecast = data["min_temp"].round() as int;
-      _minTemperatureForecast = data["max_temp"].round() as int;
+      _currentTemperature = data["the_temp"].round() as int;
       _weather = data["weather_state_name"].replaceAll(' ', '').toLowerCase()
           as String;
-      _abbrevation = data["weather_state_abbr"] as String;
+      _currentWeatherAbbrevation = data["weather_state_abbr"] as String;
 
       // Get 7 Day Forecast
-      await fetchSevenDaysForecast();
+      await _fetchSevenDaysForecast();
 
       // Catch some kind of error
     } on SocketException {
@@ -90,7 +85,7 @@ class WeatherApi extends ChangeNotifier {
   }
 
   //Use current geolocation
-  Future<void> get currentLocation async {
+  Future<void> get currentGeolocation async {
     try {
       final Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
@@ -103,7 +98,7 @@ class WeatherApi extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchSevenDaysForecast() async {
+  Future<void> _fetchSevenDaysForecast() async {
     final today = DateTime.now();
     try {
       for (var i = 0; i < daysForecast; i++) {
@@ -117,10 +112,10 @@ class WeatherApi extends ChangeNotifier {
         final result = json.decode(locationDayResult.body);
         final data = result[0];
 
-        _abbreviationForecast2[i] = data["weather_state_abbr"] as String;
-        print(_abbreviationForecast2);
-        _minTemperatureForecast2[i] = data["min_temp"].round() as int;
-        _maxTemperatureForecast2[i] = data["max_temp"].round() as int;
+        _forecastWeatherAbbreviation[i] = data["weather_state_abbr"] as String;
+        print(_forecastWeatherAbbreviation);
+        _forecastMinTemperature[i] = data["min_temp"].round() as int;
+        _forecastMaxTemperature[i] = data["max_temp"].round() as int;
         _isLoading = false;
         _isLoaded = true;
       }
