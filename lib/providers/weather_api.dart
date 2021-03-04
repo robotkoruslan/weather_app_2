@@ -46,7 +46,6 @@ class WeatherApi extends ChangeNotifier {
     }
 
     try {
-      // Get Where On Earth IDentifier
       final woeId = await http.get(
           'https://www.metaweather.com/api/location/search/?query=' +
               newLocation);
@@ -54,7 +53,6 @@ class WeatherApi extends ChangeNotifier {
       _location = result['title'] as String;
       _woeid = result['woeid'] as int;
 
-      // Get Current Day Forecast
       final currentForecast = await http
           .get('https://www.metaweather.com/api/location/' + _woeid.toString());
       final weatherResult = json.decode(currentForecast.body);
@@ -63,11 +61,7 @@ class WeatherApi extends ChangeNotifier {
       _weather = data["weather_state_name"].replaceAll(' ', '').toLowerCase()
           as String;
       _currentWeatherAbbrevation = data["weather_state_abbr"] as String;
-
-      // Get 7 Day Forecast
       await _fetchSevenDaysForecast();
-
-      // Catch some kind of error
     } on SocketException {
       stopAndNotify();
       throw 'Check internet connections!';
@@ -84,7 +78,6 @@ class WeatherApi extends ChangeNotifier {
     stopAndNotify();
   }
 
-  //Use current geolocation
   Future<void> get currentGeolocation async {
     try {
       final Position position = await Geolocator.getCurrentPosition(
@@ -111,9 +104,7 @@ class WeatherApi extends ChangeNotifier {
                     .toString());
         final result = json.decode(locationDayResult.body);
         final data = result[0];
-
         _forecastWeatherAbbreviation[i] = data["weather_state_abbr"] as String;
-        print(_forecastWeatherAbbreviation);
         _forecastMinTemperature[i] = data["min_temp"].round() as int;
         _forecastMaxTemperature[i] = data["max_temp"].round() as int;
         _isLoading = false;
