@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app_2/providers/weather_api.dart';
+import 'package:weather_app_2/providers/weather_data_provider.dart';
 import 'package:provider/provider.dart';
 
 class FindTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scaffold = ScaffoldMessenger.of(context);
-    final _controller = TextEditingController();
-    return (context.watch<WeatherApi>().isLoading)
+    return (context.watch<WeatherDataProvider>().loading)
         ? const Center(
             child: CircularProgressIndicator(),
           )
@@ -16,23 +15,20 @@ class FindTextField extends StatelessWidget {
               SizedBox(
                 width: 300,
                 child: TextField(
-                  controller: _controller,
-                  onSubmitted: (newLocation) async {
+                  onSubmitted: (city) {
                     try {
-                      await context
-                          .read<WeatherApi>()
-                          .fetchWeatherInfo(newLocation);
+                      context.read<WeatherDataProvider>().getWeatherData(city);
+                      TextEditingController().clear();
                     } catch (error) {
                       scaffold.showSnackBar(
                         SnackBar(
                           content: Text(
-                            "$error",
+                            '$error',
                             textAlign: TextAlign.center,
                           ),
                         ),
                       );
                     }
-                    _controller.clear();
                   },
                   style: const TextStyle(color: Colors.white, fontSize: 25),
                   decoration: const InputDecoration(

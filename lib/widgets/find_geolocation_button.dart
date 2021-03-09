@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:weather_app_2/providers/weather_api.dart';
+import 'package:weather_app_2/providers/weather_data_provider.dart';
 
 class FindGeolocationButton extends StatelessWidget {
   @override
@@ -20,12 +20,14 @@ class FindGeolocationButton extends StatelessWidget {
           ),
           onPressed: () async {
             try {
-              await context.read<WeatherApi>().currentGeolocation;
-            } on Exception catch (e) {
+              await context
+                  .read<WeatherDataProvider>()
+                  .getDataUsingGeolacation();
+            } catch (error) {
               scaffold.showSnackBar(
                 SnackBar(
                   content: Text(
-                    "$e",
+                    '$error',
                     textAlign: TextAlign.center,
                   ),
                 ),
