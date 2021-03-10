@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:weather_app_2/models/weather.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
@@ -9,7 +10,8 @@ class WeatherApiClient {
   Future<int> getLocationId(String city) async {
     final locationUrl = '$baseUrl/api/location/search/?query=$city';
     final locationResponse = await http.get(locationUrl);
-    if (locationResponse.statusCode != 200) {
+
+    if (locationResponse.statusCode != HttpStatus.ok) {
       throw Exception('error getting locationId for city');
     }
     final locationJson = jsonDecode(locationResponse.body) as List;
@@ -19,8 +21,9 @@ class WeatherApiClient {
   Future<Weather> fetchWeather(int locationId) async {
     final weatherUrl = '$baseUrl/api/location/$locationId';
     final weatherResponse = await http.get(weatherUrl);
-    if (weatherResponse.statusCode != 200) {
-      throw Exception('error getting weather for location');
+
+    if (weatherResponse.statusCode != HttpStatus.ok) {
+      throw Exception('Error getting weather for location');
     }
     final weatherJson = jsonDecode(weatherResponse.body);
     return Weather.fromJson(weatherJson);
@@ -31,8 +34,8 @@ class WeatherApiClient {
         desiredAccuracy: LocationAccuracy.high);
     final citylocation = await http.get(
         '$baseUrl/api/location/search/?lattlong=${position.latitude},${position.longitude}');
-    if (citylocation.statusCode != 200) {
-      throw Exception('error getting weather for location');
+    if (citylocation.statusCode != HttpStatus.ok) {
+      throw Exception('Error getting weather for location');
     }
     return json.decode(citylocation.body)[0]['title'] as String;
   }
