@@ -153,5 +153,5 @@ linter:
         tighten_type_of_initializing_formals: true
         type_init_formals: true
         unawaited_futures: true
-        sort_pub_dependencies: true
+        sort_pub_dependencies: false
         constant_identifier_names: false

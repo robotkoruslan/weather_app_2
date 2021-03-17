@@ -10,6 +10,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final TextEditingController _controller = TextEditingController();
   Future<Weather> _futureWeather;
+  String weatherBackground = 'clear';
 
   @override
   Widget build(BuildContext context) => MaterialApp(
@@ -17,8 +18,7 @@ class _HomePageState extends State<HomePage> {
         home: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: const AssetImage(
-                  'images/clear.png'), //I don't known how to change "clear" from response using FutureBuilder?
+              image: AssetImage('images/$weatherBackground.png'),
               fit: BoxFit.cover,
               colorFilter: ColorFilter.mode(
                   Colors.black.withOpacity(0.6), BlendMode.dstATop),
@@ -44,10 +44,7 @@ class _HomePageState extends State<HomePage> {
                               width: 100,
                             ),
                             Text(
-                              snapshot.data.currentTemperature
-                                      .round()
-                                      .toString() +
-                                  ' °C',
+                              snapshot.data.temperatureInCelsius,
                               style: const TextStyle(
                                   color: Colors.white, fontSize: 60),
                             ),
@@ -87,7 +84,6 @@ class _HomePageState extends State<HomePage> {
                           setState(() {
                             _futureWeather =
                                 WeatherRepository().getWeather(city);
-                            _controller.clear();
                           });
                         },
                         style:
